@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 
 function UserForm(props){
-    const [user, setUser] = useState({name: '', email: '', password: ''});
+    // const [user, setUser] = useState({name: '', email: '', password: ''});
     return (
         <Form>
             {props.touched.name && props.errors.name && <p>{props.errors.name}</p>}
@@ -18,7 +18,7 @@ function UserForm(props){
             <br />
             {props.touched.tos && props.errors.tos && <p>{props.errors.tos}</p>}
             <label htmlFor="tos">Accept Terms of Service: </label>
-            <Field type="checkbox" name="tos" id="tos" checked={props.tos}/>
+            <Field type="checkbox" name="tos" id="tos" checked={props.values.tos}/>
             <br />
             <button type="submit">Submit</button>
         </Form>
@@ -53,6 +53,8 @@ const FormikUserForm = withFormik({
         console.log(values, FormikBag);
         axios.post('https://reqres.in/api/users')
             .then(res => console.log(res))
+            .then(FormikBag.props.handleNewUser({name: values.name, email: values.email}))
+            .then(FormikBag.resetForm())
             .catch(err => console.log(`Error: ${err}`));
     }
 })(UserForm);
